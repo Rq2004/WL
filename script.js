@@ -147,6 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close all others
         document.querySelectorAll('.release-header.expanded').forEach(h => {
             if (h !== header) {
+                // If a file is selected in the closing release, deselect it
+                const fileInside = h.nextElementSibling.querySelector('.asset-item.selected');
+                if (fileInside) {
+                    selectFile(fileInside); // This will call the deselection logic
+                }
                 logToCli(`Collapsed release: ${h.dataset.releaseName}`);
                 h.classList.remove('expanded');
                 h.nextElementSibling.style.maxHeight = null;
@@ -155,6 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (isExpanded) {
+            // Deselect file if inside the one being collapsed by the user
+            const fileInside = assetsList.querySelector('.asset-item.selected');
+            if (fileInside) {
+                selectFile(fileInside); // This will call the deselection logic
+            }
             header.classList.remove('expanded');
             assetsList.style.maxHeight = null;
             header.querySelector('.arrow').style.transform = 'rotate(0deg)';
@@ -171,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectFile(fileItem) {
         const currentSelected = document.querySelector('.asset-item.selected');
+        const expandedHeader = document.querySelector('.release-header.expanded');
+        const releaseName = expandedHeader ? expandedHeader.dataset.releaseName : '';
 
         // Case 1: Clicking the already selected file to deselect it.
         if (currentSelected === fileItem) {
@@ -179,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedFileInfo.textContent = '未选择文件';
             downloadBtn.disabled = true;
             logToCli(`Deselected file: ${fileItem.dataset.name}`);
+            if (expandedHeader) {
+                pathDisplay.textContent = `/${releaseName}`;
+            }
             return; // Exit function
         }
 
@@ -198,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedFileInfo.textContent = `[${selectedFile.size}] ${selectedFile.name}`;
         downloadBtn.disabled = false;
         logToCli(`Selected file: ${fileItem.dataset.name}`);
+        if (expandedHeader) {
+            pathDisplay.textContent = `/${releaseName}/${selectedFile.name}`;
+        }
     }
 
     downloadBtn.addEventListener('click', () => {
