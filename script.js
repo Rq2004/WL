@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close all others
         document.querySelectorAll('.release-header.expanded').forEach(h => {
             if (h !== header) {
+                logToCli(`Collapsed release: ${h.dataset.releaseName}`);
                 h.classList.remove('expanded');
                 h.nextElementSibling.style.maxHeight = null;
                  h.querySelector('.arrow').style.transform = 'rotate(0deg)';
