@@ -212,4 +212,22 @@ body {
 
 .button:not(:disabled):hover {
     filter: brightness(1.2);
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .main-content {
+        grid-row: 1;
+        height: auto;
+    }
+
+    .cli-output {
+        grid-row: 2;
+        height: auto;
+    }
 } 
