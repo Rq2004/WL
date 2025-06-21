@@ -169,30 +169,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectFile(fileItem) {
-        // Deselect previous
         const currentSelected = document.querySelector('.asset-item.selected');
-        if (currentSelected) {
-            currentSelected.classList.remove('selected');
-        }
 
+        // Case 1: Clicking the already selected file to deselect it.
         if (currentSelected === fileItem) {
-            // Clicked the same item again, so deselect it
+            currentSelected.classList.remove('selected');
             selectedFile = null;
             selectedFileInfo.textContent = '未选择文件';
             downloadBtn.disabled = true;
-            logToCli('Deselected file.');
-        } else {
-            // Select new item
-            fileItem.classList.add('selected');
-            selectedFile = {
-                url: fileItem.dataset.url,
-                name: fileItem.dataset.name,
-                size: fileItem.dataset.size
-            };
-            selectedFileInfo.textContent = `[${selectedFile.size}] ${selectedFile.name}`;
-            downloadBtn.disabled = false;
-            logToCli(`Selected file: ${selectedFile.name}`);
+            logToCli(`Deselected file: ${fileItem.dataset.name}`);
+            return; // Exit function
         }
+
+        // Case 2: Switching from one file to another, log the deselection first.
+        if (currentSelected) {
+            logToCli(`Deselected file: ${currentSelected.dataset.name}`);
+            currentSelected.classList.remove('selected');
+        }
+
+        // Case 3: Selecting a new file (either for the first time, or after switching).
+        fileItem.classList.add('selected');
+        selectedFile = {
+            url: fileItem.dataset.url,
+            name: fileItem.dataset.name,
+            size: fileItem.dataset.size
+        };
+        selectedFileInfo.textContent = `[${selectedFile.size}] ${selectedFile.name}`;
+        downloadBtn.disabled = false;
+        logToCli(`Selected file: ${fileItem.dataset.name}`);
     }
 
     downloadBtn.addEventListener('click', () => {
