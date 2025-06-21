@@ -60,9 +60,30 @@ document.addEventListener('DOMContentLoaded', () => {
         logToCli(`CLICK (x:${e.clientX}, y:${e.clientY}) on ${e.target.tagName}`);
     });
 
+    async function fetchAnnouncement() {
+        logToCli('Fetching system broadcast...');
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/Rq2004/WL/main/home.txt');
+            if (!response.ok) {
+                throw new Error(`Broadcast transmission failed. STATUS: ${response.status}`);
+            }
+            const text = await response.text();
+            if (text.trim()) {
+                logToCli("--- [ SYSTEM BROADCAST ] ---");
+                text.split('\n').forEach(line => {
+                    logToCli(`  ${line}`);
+                });
+                logToCli("----------------------------");
+            } else {
+                logToCli("No active broadcast.");
+            }
+        } catch (error) {
+            logToCli(`[ERROR] Failed to fetch broadcast: ${error.message}`, 'ERROR');
+        }
+    }
+
     // --- Core Logic ---
     async function fetchReleases() {
-        logToCli('Initializing system...');
         logToCli('Connecting to repository: Rq2004/WL');
         try {
             const response = await fetch(`https://api.github.com/repos/Rq2004/WL/releases`);
@@ -215,5 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Initializer ---
-    fetchReleases();
+    async function initialize() {
+        logToCli('System initializing...');
+        await fetchAnnouncement();
+        await fetchReleases();
+        logToCli('System ready. Awaiting user input.');
+    }
+    initialize();
 }); 

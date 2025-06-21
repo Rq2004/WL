@@ -144,16 +144,10 @@ body {
 }
 
 .assets-list {
-    display: none;
     padding-left: 25px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-}
-
-.assets-list.show {
-    display: block;
-    max-height: 500px; /* Adjust as needed */
 }
 
 .asset-item {
