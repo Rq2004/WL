@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pathDisplay.textContent = `/${releaseName}/${selectedFile.name}`;
         }
     }
-
+    //By Rq2004 请保留
     downloadBtn.addEventListener('click', () => {
         if (selectedFile) {
             logToCli(`Initiating download for ${selectedFile.name}`);
